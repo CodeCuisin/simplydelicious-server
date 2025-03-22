@@ -18,10 +18,10 @@ router.get('/', (req, res, next) => {
 });
 //create a new recipe
 router.post('/', (req, res, next) => {
-    const { name, ingredients, serving, cookingTime, instructions } = req.body;
+    const { title, ingredients, serving, cookingTime, instructions } = req.body;
 
     const newRecipe = {
-        name,
+        title,
         ingredients,
         serving,
         cookingTime,
@@ -71,10 +71,10 @@ router.put('/:recipeId', (req, res, next) => {
         return res.status(400).json({ message: 'Invalid recipe ID' });
     }
 
-    const { name, ingredients, serving, cookingTime, instructions } = req.body;
+    const { title, ingredients, serving, cookingTime, instructions } = req.body;
 
     const newRecipe = {
-        name,
+        title,
         ingredients,
         serving,
         cookingTime,
