@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const PORT = process.env.PORT || 5005;
 
 //get all recipes
-router.get('/', (req, res, next) => {
+router.get('/recipes', (req, res, next) => {
     prisma.recipe
         .findMany()
         .then(allRecipes => {
@@ -17,7 +17,7 @@ router.get('/', (req, res, next) => {
         });
 });
 //create a new recipe
-router.post('/', (req, res, next) => {
+router.post('/create-recipe', (req, res, next) => {
     const { title, ingredients, serving, cookingTime, instructions } = req.body;
 
     const newRecipe = {
@@ -41,7 +41,7 @@ router.post('/', (req, res, next) => {
 });
 
 //get recipes by specific id
-router.get('/:recipeId', (req, res, next) => {
+router.get('/recipes/:recipeId', (req, res, next) => {
     const { recipeId } = req.params;
     const id = parseInt(recipeId, 10); // Convert to an integer
 if (isNaN(id)) {
@@ -64,7 +64,7 @@ if (isNaN(id)) {
 });
 
 // Updates a specific recipe by id
-router.put('/:recipeId', (req, res, next) => {
+router.put('/recipes/:recipeId', (req, res, next) => {
     const { recipeId } = req.params;
     const id = parseInt(recipeId, 10); // Convert to an integer
     if (isNaN(id)) {
@@ -92,7 +92,7 @@ router.put('/:recipeId', (req, res, next) => {
 });
 
 // Delete a specific recipe by id
-router.delete('/:recipeId', (req, res, next) => {
+router.delete('/recipes/:recipeId', (req, res, next) => {
     const { recipeId } = req.params;
     const id = parseInt(recipeId, 10); // Convert to an integer
     if (isNaN(id)) {

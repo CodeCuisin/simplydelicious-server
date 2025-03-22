@@ -20,7 +20,7 @@ const indexRoutes = require("./routes/index.routes");
 app.use("/api", indexRoutes);
 
 const recipeRoutes = require("./routes/recipes.routes");
-app.use("/recipes", recipeRoutes);
+app.use("/", recipeRoutes);
 //const authRoutes = require("./routes/auth.routes");
 //app.use("/auth", authRoutes);
 

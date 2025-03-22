@@ -5,7 +5,7 @@ ADD COLUMN     "image" TEXT;
 -- CreateTable
 CREATE TABLE "Recipe" (
     "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
     "ingredients" TEXT NOT NULL,
     "serving" INTEGER NOT NULL,
     "cookingTime" INTEGER NOT NULL,
