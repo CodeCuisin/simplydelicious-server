@@ -9,6 +9,9 @@ router.get('/recipes', (req, res, next) => {
     prisma.recipe
         .findMany()
         .then(allRecipes => {
+            if (!allRecipes || allRecipes.length === 0) {
+                return res.status(200).json({ message: "No recipes found" });
+              }
             res.json(allRecipes);
         })
         .catch(err => {

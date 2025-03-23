@@ -5,8 +5,16 @@ require("dotenv").config();
 // Handles http requests (express is node js framework)
 // https://www.npmjs.com/package/express
 const express = require("express");
-
+const cors = require("cors");
 const app = express();
+
+app.use(cors({
+  origin: "http://localhost:5173",  
+  methods: ["GET", "POST", "PUT", "DELETE"], 
+  allowedHeaders: ["Content-Type", "Authorization"], 
+}));
+
+
 
 // 💡 Ensure the express.json() middleware is used before the routes
 app.use(express.json());  // This line should be above route definition
