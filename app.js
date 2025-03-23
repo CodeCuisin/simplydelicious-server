@@ -29,6 +29,9 @@ app.use("/api", indexRoutes);
 
 const recipeRoutes = require("./routes/recipes.routes");
 app.use("/", recipeRoutes);
+
+const usersRoutes = require("./routes/user.routes");
+app.use("/", usersRoutes);
 //const authRoutes = require("./routes/auth.routes");
 //app.use("/auth", authRoutes);
 
