@@ -21,10 +21,12 @@ router.get('/recipes', (req, res, next) => {
 });
 //create a new recipe
 router.post('/create-recipe', (req, res, next) => {
-    const { title, ingredients, serving, cookingTime, instructions } = req.body;
+    const { title, description,image,ingredients, serving, cookingTime, instructions } = req.body;
 
     const newRecipe = {
         title,
+        description,
+        image,
         ingredients,
         serving,
         cookingTime,
