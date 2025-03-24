@@ -23,7 +23,29 @@ function getTokenFromHeaders(req) {
   return null;
 }
 
+const isOwner = (req, res, next) => {
+  const userIdFromToken = req.payload.id; // Number
+  const userIdFromParams = parseInt(req.params.userId, 10); // Convert to Number
+
+  if (isNaN(userIdFromParams)) {
+    return res.status(400).json({ message: "Invalid user ID" });
+  }
+
+  if (userIdFromToken !== userIdFromParams) {
+    return res.status(403).json({ message: "You are not authorized to perform this action" });
+  }
+
+  next();
+};
+
+
+const logPayload = (req, res, next) => {
+  console.log(req.payload); // This should contain the decoded JWT payload if authentication is successful
+  next();
+};
+
 // Export the middleware so that we can use it to create protected routes
 module.exports = {
   isAuthenticated,
+  isOwner, logPayload
 };
