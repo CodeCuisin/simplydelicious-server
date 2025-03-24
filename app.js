@@ -2,16 +2,18 @@
 // https://www.npmjs.com/package/dotenv
 require("dotenv").config();
 
+
 // Handles http requests (express is node js framework)
 // https://www.npmjs.com/package/express
 const express = require("express");
 const cors = require("cors");
 const app = express();
 
+
 app.use(cors({
-  origin: "http://localhost:5173",  
-  methods: ["GET", "POST", "PUT", "DELETE"], 
-  allowedHeaders: ["Content-Type", "Authorization"], 
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
 
@@ -24,6 +26,7 @@ require("./config")(app);
 app.use(express.urlencoded({ extended: true }));
 
 // 👇 Start handling routes here
+app.use("/auth", require("./routes/auth.routes"));
 const indexRoutes = require("./routes/index.routes");
 app.use("/api", indexRoutes);
 
