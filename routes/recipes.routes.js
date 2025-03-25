@@ -34,7 +34,7 @@ router.post('/create-recipe', (req, res, next) => {
         ingredients,
         serving,
         cookingTime,
-        tags, 
+        tags: tags || [],
         cuisine,
         instructions,  
         author: {      
