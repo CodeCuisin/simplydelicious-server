@@ -21,7 +21,11 @@ router.get('/recipes', (req, res, next) => {
 });
 //create a new recipe
 router.post('/create-recipe', (req, res, next) => {
-    const { title, description,image,ingredients, serving, cookingTime, instructions } = req.body;
+    const { title, description,image,ingredients, serving, cookingTime, instructions , author,} = req.body;
+
+    if (!author) {
+        return res.status(400).json({ message: 'Author information is missing.' });
+      }
 
     const newRecipe = {
         title,
@@ -30,7 +34,10 @@ router.post('/create-recipe', (req, res, next) => {
         ingredients,
         serving,
         cookingTime,
-        instructions
+        instructions,  
+        author: {      
+      connect: { id: author.id },  
+    },
     };
 
     prisma.recipe
@@ -76,7 +83,7 @@ router.put('/recipes/:recipeId', (req, res, next) => {
         return res.status(400).json({ message: 'Invalid recipe ID' });
     }
 
-    const { title,description,image, ingredients, serving, cookingTime, instructions } = req.body;
+    const { title,description,image, ingredients, serving, cookingTime, instructions , author, } = req.body;
 
     const newRecipe = {
         title,
@@ -85,7 +92,8 @@ router.put('/recipes/:recipeId', (req, res, next) => {
         ingredients,
         serving,
         cookingTime,
-        instructions
+        instructions,
+        author,
     };
     prisma.recipe
         .update({ where: { id:id }, data: newRecipe })
