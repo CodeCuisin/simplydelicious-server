@@ -76,10 +76,12 @@ router.put('/recipes/:recipeId', (req, res, next) => {
         return res.status(400).json({ message: 'Invalid recipe ID' });
     }
 
-    const { title, ingredients, serving, cookingTime, instructions } = req.body;
+    const { title,description,image, ingredients, serving, cookingTime, instructions } = req.body;
 
     const newRecipe = {
         title,
+        description,
+        image,
         ingredients,
         serving,
         cookingTime,
