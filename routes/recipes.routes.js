@@ -21,7 +21,7 @@ router.get('/recipes', (req, res, next) => {
 });
 //create a new recipe
 router.post('/create-recipe', (req, res, next) => {
-    const { title, description,image,ingredients, serving, cookingTime, instructions , author,} = req.body;
+    const { title, description,image,ingredients, serving, cookingTime, instructions , author,tags, cuisine} = req.body;
 
     if (!author) {
         return res.status(400).json({ message: 'Author information is missing.' });
@@ -34,6 +34,8 @@ router.post('/create-recipe', (req, res, next) => {
         ingredients,
         serving,
         cookingTime,
+        tags, 
+        cuisine,
         instructions,  
         author: {      
       connect: { id: author.id },  
@@ -61,7 +63,7 @@ if (isNaN(id)) {
 }
 
     prisma.recipe
-        .findUnique({ where: { id: id} })
+        .findUnique({ where: { id: id},include: { author: true }, })
         .then(recipe => {
             if (!recipe) {
                 res.status(404).json({ message: 'recipe not found' });
@@ -82,10 +84,29 @@ router.put('/recipes/:recipeId', (req, res, next) => {
     if (isNaN(id)) {
         return res.status(400).json({ message: 'Invalid recipe ID' });
     }
+    const { title,description,image, ingredients, serving, cookingTime, instructions , author,tags, cuisine } = req.body;
+    const validTags = ['Lunch', 'Breakfast', 'Dinner', 'Dessert', 'Snacks'];
+    const validCuisines = ['Indian', 'Arabic', 'Italian', 'Mexican', 'French', 'American', 'German'];
 
-    const { title,description,image, ingredients, serving, cookingTime, instructions , author, } = req.body;
+    if (!author || !author.id) {
+        return res.status(400).json({ message: 'Author information is missing or invalid' });
+    }
 
-    const newRecipe = {
+    prisma.user.findUnique({
+        where: { id: author.id },  // Check if the author with the given ID exists
+    })
+        .then(existingUser => {
+            if (!existingUser) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+                if (tags && !tags.every(tag => validTags.includes(tag))) {
+                return res.status(400).json({ message: 'Invalid tag(s) provided' });
+            }
+    
+            if (cuisine && !validCuisines.includes(cuisine)) {
+                return res.status(400).json({ message: 'Invalid cuisine provided' });
+            }
+       const newRecipe = {
         title,
         description,
         image,
@@ -93,10 +114,18 @@ router.put('/recipes/:recipeId', (req, res, next) => {
         serving,
         cookingTime,
         instructions,
-        author,
+        author: {
+             connect: {
+              id: author.id,
+            },
+        },
+        tags  :{
+            set: tags ? tags.map(tag => tag) : [] 
+        },
+        cuisine,
     };
-    prisma.recipe
-        .update({ where: { id:id }, data: newRecipe })
+   return prisma.recipe
+        .update({ where: { id }, data: newRecipe });})
         .then(updatedRecipe => {
             res.json(updatedRecipe);
         })
