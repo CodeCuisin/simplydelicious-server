@@ -11,7 +11,7 @@ router.get('/recipes', (req, res, next) => {
         .then(allRecipes => {
             if (!allRecipes || allRecipes.length === 0) {
                 return res.status(200).json({ message: "No recipes found" });
-              }
+            }
             res.json(allRecipes);
         })
         .catch(err => {
@@ -21,11 +21,12 @@ router.get('/recipes', (req, res, next) => {
 });
 //create a new recipe
 router.post('/create-recipe', (req, res, next) => {
-    const { title, description,image,ingredients, serving, cookingTime, instructions , author,} = req.body;
+
+    const { title, description, image, ingredients, serving, cookingTime, instructions, author, } = req.body;
 
     if (!author) {
         return res.status(400).json({ message: 'Author information is missing.' });
-      }
+    }
 
     const newRecipe = {
         title,
@@ -34,10 +35,10 @@ router.post('/create-recipe', (req, res, next) => {
         ingredients,
         serving,
         cookingTime,
-        instructions,  
-        author: {      
-      connect: { id: author.id },  
-    },
+        instructions,
+        author: {
+            connect: { id: author.id },
+        },
     };
 
     prisma.recipe
@@ -56,12 +57,12 @@ router.post('/create-recipe', (req, res, next) => {
 router.get('/recipes/:recipeId', (req, res, next) => {
     const { recipeId } = req.params;
     const id = parseInt(recipeId, 10); // Convert to an integer
-if (isNaN(id)) {
-    return res.status(400).json({ message: 'Invalid recipe ID' });
-}
+    if (isNaN(id)) {
+        return res.status(400).json({ message: 'Invalid recipe ID' });
+    }
 
     prisma.recipe
-        .findUnique({ where: { id: id} })
+        .findUnique({ where: { id: id } })
         .then(recipe => {
             if (!recipe) {
                 res.status(404).json({ message: 'recipe not found' });
@@ -83,7 +84,8 @@ router.put('/recipes/:recipeId', (req, res, next) => {
         return res.status(400).json({ message: 'Invalid recipe ID' });
     }
 
-    const { title,description,image, ingredients, serving, cookingTime, instructions , author, } = req.body;
+
+    const { title, description, image, ingredients, serving, cookingTime, instructions, author, } = req.body;
 
     const newRecipe = {
         title,
@@ -96,7 +98,7 @@ router.put('/recipes/:recipeId', (req, res, next) => {
         author,
     };
     prisma.recipe
-        .update({ where: { id:id }, data: newRecipe })
+        .update({ where: { id: id }, data: newRecipe })
         .then(updatedRecipe => {
             res.json(updatedRecipe);
         })
