@@ -23,6 +23,7 @@ router.get("/users", async (req, res) => {
 
 //get user by specific ID
 router.get("/users/:usersId", async (req, res) => {
+  res.setHeader("Cache-Control", "no-store"); 
   const { usersId } = req.params;
   const id = parseInt(usersId, 10); // Convert to an integer
 
@@ -36,7 +37,6 @@ router.get("/users/:usersId", async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
     res.json(user);
   } catch (err) {
     console.error("Error getting user from DB:", err);
