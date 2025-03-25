@@ -44,7 +44,7 @@ router.get("/users/:usersId", async (req, res) => {
   }
 });
 
-router.put('/users/:userId', isAuthenticated, isOwner, async (req, res) => {
+router.put('/users/:userId',isAuthenticated, isOwner,async (req, res) => {
   const { userId } = req.params;
   const id = parseInt(userId, 10); // Convert to an integer
 
@@ -53,10 +53,6 @@ router.put('/users/:userId', isAuthenticated, isOwner, async (req, res) => {
   }
 
   const { name, email, image, bio } = req.body;
-
-  if (!name || !email) {
-    return res.status(400).json({ message: 'Name and email are required' });
-  }
 
   try {
     const updatedUser = await prisma.user.update({

@@ -9,7 +9,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 
 const saltRounds = 10;
 
-
+// Signup Route
 router.post("/signup", async (req, res, next) => {
   try {
     const { email, password, name } = req.body;
@@ -31,16 +31,13 @@ router.post("/signup", async (req, res, next) => {
       });
     }
 
-
     const existingUser = await prisma.user.findUnique({ where: { email } });
 
     if (existingUser) {
       return res.status(400).json({ message: "User already exists." });
     }
 
-
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-
 
     const newUser = await prisma.user.create({
       data: {
@@ -50,17 +47,17 @@ router.post("/signup", async (req, res, next) => {
       },
     });
 
-
     const { id, name: userName, email: userEmail } = newUser;
     res.status(201).json({ user: { id, name: userName, email: userEmail } });
 
   } catch (error) {
     console.error("Signup Error:", error);
+    res.status(500).json({ message: "Internal server error" }); // Return a generic error message
     next(error);
   }
 });
 
-
+// Login Route
 router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -69,37 +66,36 @@ router.post("/login", async (req, res, next) => {
       return res.status(400).json({ message: "Provide email and password." });
     }
 
-
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
       return res.status(401).json({ message: "User not found." });
     }
 
-
     const passwordCorrect = await bcrypt.compare(password, user.password);
     if (!passwordCorrect) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
 
-
     const payload = { id: user.id, email: user.email, name: user.name };
     const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
       algorithm: "HS256",
-      expiresIn: "6h",
+      expiresIn: "6h", // Token expiry time
     });
 
     res.status(200).json({ authToken });
 
   } catch (error) {
     console.error("Login Error:", error);
+    res.status(500).json({ message: "Internal server error" }); // Return a generic error message
     next(error);
   }
 });
 
+// Verify Route (Protected)
 router.get("/verify", isAuthenticated, (req, res) => {
   console.log("User Verified:", req.payload);
-  res.status(200).json(req.payload);
+  res.status(200).json(req.payload); // Return user payload
 });
 
 module.exports = router;
