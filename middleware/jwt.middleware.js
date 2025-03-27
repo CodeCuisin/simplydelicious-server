@@ -19,7 +19,6 @@ function getTokenFromHeaders(req) {
     const token = req.headers.authorization.split(" ")[1];
     return token;
   }
-
   return null;
 }
 
@@ -37,7 +36,6 @@ const isOwner = (req, res, next) => {
 
   next();
 };
-
 
 const logPayload = (req, res, next) => {
   console.log(req.payload); // This should contain the decoded JWT payload if authentication is successful
