@@ -5,17 +5,27 @@ require("dotenv").config();
 
 // Handles http requests (express is node js framework)
 // https://www.npmjs.com/package/express
-const express = require("express");
+
 const cors = require("cors");
+const express = require("express");
 const app = express();
 
+const allowedOrigins = [
+  'http://localhost:5173',  // Local dev server
+  'https://simply-delicious-recipes.netlify.app',  // Production frontend
+];
 
 app.use(cors({
-  origin: "http://localhost:5173",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  origin: function(origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      // Allow the request
+      callback(null, true);
+    } else {
+      // Reject the request
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
 }));
-
 
 
 // 💡 Ensure the express.json() middleware is used before the routes
